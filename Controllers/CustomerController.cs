@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MoneyGo.Application.Customers.Commands.CreateCustomer;
 using MoneyGo.Application.Customers.Commands.CustomerCommands;
 using MoneyGo.Application.Customers.Queries.GetCustomerById;
+using MoneyGo.Application.Customers.Queries.GetCustomersByUserId;
 
 namespace MoneyGo.Api.Controllers
 {
@@ -22,11 +23,24 @@ namespace MoneyGo.Api.Controllers
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
 
-        [HttpGet("{id:int:min:1}")]
-        public async Task<IActionResult> GetById([FromBody] int id)
+        [HttpGet("by-userid/{userId:int}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetCustomersByUserId(int userId)
+        {
+            var result = await mediator.Send(new GetCustomersByUserIdQuery(userId));
+            return result.IsSuccess
+                ? Ok(result.Value)
+                : NotFound(result.Error);
+        }
+
+        [HttpGet("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetById(int id)
         {
             var result = await mediator.Send(new GetCustomerByIdQuery(id));
-            return result.IsSuccess ? Ok(result.Value) : NotFound(result.Error);
+            return result.IsSuccess 
+                ? Ok(result.Value) 
+                : NotFound(result.Error);
         }
     }
 }
