@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using MoneyGo.Application.Customers.Commands.CreateCustomer;
 using MoneyGo.Application.Customers.Commands.CustomerCommands;
 using MoneyGo.Application.Customers.Commands.DeleteCustomer;
 using MoneyGo.Application.Customers.Commands.UpdateCustomer;
+using MoneyGo.Application.Customers.DTOs;
 using MoneyGo.Application.Customers.Queries.GetCustomerById;
 using MoneyGo.Application.Customers.Queries.GetCustomersByUserId;
 
@@ -19,7 +19,7 @@ namespace MoneyGo.Api.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create([FromBody] CreateCustomerRequest customer)
+        public async Task<IActionResult> Create([FromBody] CustomerRequest customer)
         {
             var result = await mediator.Send(new AddCustomerCommand(customer));
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
@@ -47,7 +47,7 @@ namespace MoneyGo.Api.Controllers
 
         [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateCustomerRequest customerDetails)
+        public async Task<IActionResult> Update(int id, [FromBody] CustomerRequest customerDetails)
         {
             var result = await mediator.Send(new UpdateCustomerCommand(id, customerDetails));
             return result.IsSuccess
