@@ -21,7 +21,7 @@
         [HttpPost("login")]
         public async Task<IActionResult> LoginUser([FromBody] AuthRequest request)
         {
-            var result = await mediator.Send(new LoginUserCommand(request.Username, request.Password));
+            var result = await mediator.Send(new LoginUserCommnad(request.Username, request.Password));
 
             return result.IsSuccess
                 ? Ok(result.Value)

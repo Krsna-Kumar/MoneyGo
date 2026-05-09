@@ -1,20 +1,20 @@
 ﻿using MoneyGo.Application.Common.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace MoneyGo.Api.Services
+public class CurrentUserSerivce(IHttpContextAccessor _httpContextAccessor) : ICurrentUserService
 {
-    public class CurrentUserSerivce
-        (IHttpContextAccessor _httpContextAccessor): ICurrentUserService
+    public int UserId
     {
-        public int UserId
+        get
         {
-            get
-            {
-                var claims = _httpContextAccessor.HttpContext?.User.FindFirst
-                    (JwtRegisteredClaimNames.Sub);
+            var userIdClaim = _httpContextAccessor.HttpContext?.User?
+                .FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
 
-                return int.Parse(claims!.Value);
+            if (int.TryParse(userIdClaim, out var userId))
+            {
+                return userId;
             }
+            return 0;
         }
     }
 }

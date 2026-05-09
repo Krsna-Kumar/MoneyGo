@@ -1,4 +1,4 @@
-using MoneyGo.Api.Services;
+using Microsoft.IdentityModel.JsonWebTokens;
 using MoneyGo.Application.Common.Interfaces;
 using Scalar.AspNetCore;
 
@@ -9,6 +9,7 @@ namespace MoneyGo.Api
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
             {
                 // Add services to the container.
                 builder.Services.AddAppDI(builder.Configuration);
