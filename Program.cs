@@ -1,4 +1,7 @@
+using MoneyGo.Api.Services;
+using MoneyGo.Application.Common.Interfaces;
 using Scalar.AspNetCore;
+
 namespace MoneyGo.Api
 {
     public class Program
@@ -9,6 +12,36 @@ namespace MoneyGo.Api
             {
                 // Add services to the container.
                 builder.Services.AddAppDI(builder.Configuration);
+
+                builder.Services.Configure<JwtOptions>(
+                    builder.Configuration.GetSection("Jwt"));
+
+                var jwtSettings = builder.Configuration
+                    .GetSection("Jwt")
+                    .Get<JwtOptions>()!;
+
+                builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.TokenValidationParameters = new()
+                        {
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
+                            
+                            ValidIssuer = jwtSettings.Issuer,
+                            ValidAudience = jwtSettings.Audience,
+                            
+                            IssuerSigningKey = new SymmetricSecurityKey(
+                                Encoding.UTF8.GetBytes(jwtSettings.Key))
+                        };
+                    });
+
+                builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+
+                builder.Services.AddHttpContextAccessor();
+                builder.Services.AddScoped<ICurrentUserService, CurrentUserSerivce>();
 
                 builder.Services.AddControllers();
                 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -27,6 +60,7 @@ namespace MoneyGo.Api
 
                 app.UseHttpsRedirection();
 
+                app.UseAuthentication();
                 app.UseAuthorization();
 
 

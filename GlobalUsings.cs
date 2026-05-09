@@ -1,4 +1,14 @@
-﻿global using MediatR;
+﻿// System
+global using System.Text;
+
+// Authentication
+global using Microsoft.AspNetCore.Authentication.JwtBearer;
+global using Microsoft.IdentityModel.Tokens;
+global using MoneyGo.Application.Common.Auth;
+global using MoneyGo.Infrastructure.Auth;
+
+// CQRS, Mediator
+global using MediatR;
 global using Microsoft.AspNetCore.Mvc;
 
 global using MoneyGo.Application.Customers.Commands.CustomerCommands;

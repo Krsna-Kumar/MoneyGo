@@ -1,8 +1,11 @@
-﻿namespace MoneyGo.Api.Controllers
+﻿using Microsoft.AspNetCore.Authorization;
+
+namespace MoneyGo.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize]
     public class CustomerController
         (IMediator mediator): ControllerBase
     {
