@@ -9,23 +9,24 @@
         (IMediator mediator): ControllerBase
     {
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterUser([FromBody] AuthRequest registerRequest)
+        public async Task<IActionResult> RegisterUser([FromBody] AuthRequest request)
         {
-            var registeredUser = await mediator.Send(new RegisterUserCommand
-                (registerRequest.Username, registerRequest.Password));
-            return registeredUser.IsSuccess
-                ? Ok(registeredUser.Value)
-                : BadRequest(registeredUser.Error);
+            var result = await mediator.Send(new RegisterUserCommand(request.Username, request.Password));
+
+            return result.IsSuccess
+                ? Ok(result.Value)
+                : BadRequest(result.Error);
         }
 
-        [HttpGet("login")]
-        public async Task<IActionResult> LoginUser([FromBody] AuthRequest loginInRequest)
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginUser([FromBody] AuthRequest request)
         {
-            var loggedInUser = await mediator.Send(new LoginUserCommnad
-                (loginInRequest.Username, loginInRequest.Password));
-            return loggedInUser.IsSuccess
-                ? Ok(loggedInUser.Value)
-                : BadRequest(loggedInUser.Error);
+            var result = await mediator.Send(new LoginUserCommand(request.Username, request.Password));
+
+            return result.IsSuccess
+                ? Ok(result.Value)
+                : Unauthorized(result.Error);
         }
+
     }
 }
