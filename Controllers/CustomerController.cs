@@ -6,6 +6,10 @@ using MoneyGo.Application.Customers.Commands.UpdateCustomer;
 using MoneyGo.Application.Customers.DTOs;
 using MoneyGo.Application.Customers.Queries.GetCustomerById;
 using MoneyGo.Application.Customers.Queries.GetCustomersByUserId;
+using MoneyGo.Application.Transactions.Commands.AddCreditTransaction;
+using MoneyGo.Application.Transactions.Commands.AddPaymentTransaction;
+using MoneyGo.Application.Transactions.DTOs;
+using MoneyGo.Application.Transactions.Queries.GetTransactionsById;
 
 namespace MoneyGo.Api.Controllers
 {
@@ -25,19 +29,19 @@ namespace MoneyGo.Api.Controllers
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
 
-        [HttpGet("by-userid/{userId:int}")]
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetCustomersByUserId(int userId)
+        public async Task<IActionResult> GetAllCustomers()
         {
-            var result = await mediator.Send(new GetCustomersByUserIdQuery(userId));
+            var result = await mediator.Send(new GetCustomersByUserIdQuery());
             return result.IsSuccess
                 ? Ok(result.Value)
-                : NotFound(result.Error);
+                : BadRequest(result.Error);
         }
 
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetCustomerById(int id)
         {
             var result = await mediator.Send(new GetCustomerByIdQuery(id));
             return result.IsSuccess 
@@ -63,6 +67,27 @@ namespace MoneyGo.Api.Controllers
             return result.IsSuccess
                 ? Ok(result.Value)
                 : NotFound(result.Error);
+        }
+
+        [HttpGet("{id:int}/transactions")]
+        public async Task<IActionResult> GetAllTransactionById(int id)
+        {
+            var result = await mediator.Send(new GetTransactionsByIdQuery(id));
+            return result.IsSuccess ? Ok(result.Value) : NotFound(result.Error);
+        }
+
+        [HttpPost("{id:int}/transactions/credit")]
+        public async Task<IActionResult> CreateCreditTransaction(int custId, [FromBody] TransactionRequest creditTrn)
+        {
+            var creditResult = await mediator.Send(new AddCreditTransactionCommand(custId, creditTrn));
+            return creditResult.IsSuccess ? Ok(creditResult.Value) : BadRequest(creditResult.Error);
+        }
+
+        [HttpPost("{id:int}/transactions.payment")]
+        public async Task<IActionResult> CreatePaymentTransaction(int custId, [FromBody]TransactionRequest paymentTrn)
+        {
+            var paymentResult = await mediator.Send(new AddPaymentTransactionCommand(custId, paymentTrn));
+            return paymentResult.IsSuccess ? Ok(paymentResult.Value) : BadRequest(paymentResult.Error);
         }
     }
 }
