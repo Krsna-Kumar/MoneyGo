@@ -7,6 +7,10 @@ global using Microsoft.IdentityModel.Tokens;
 global using MoneyGo.Application.Common.Auth;
 global using MoneyGo.Infrastructure.Auth;
 
+global using MoneyGo.Application.Common;
+global using MoneyGo.Application.Common.LoginUser;
+global using MoneyGo.Application.Common.RegisterUser;
+
 // CQRS, Mediator
 global using MediatR;
 global using Microsoft.AspNetCore.Mvc;

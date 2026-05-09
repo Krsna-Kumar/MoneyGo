@@ -1,7 +1,4 @@
-﻿using MoneyGo.Application.Common.LoginUser;
-using MoneyGo.Application.Common.RegisterUser;
-
-namespace MoneyGo.Api.Controllers
+﻿namespace MoneyGo.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -12,18 +9,20 @@ namespace MoneyGo.Api.Controllers
         (IMediator mediator): ControllerBase
     {
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterUser([FromBody] string username, string password)
+        public async Task<IActionResult> RegisterUser([FromBody] AuthRequest registerRequest)
         {
-            var registeredUser = await mediator.Send(new RegisterUserCommand(username, password));
+            var registeredUser = await mediator.Send(new RegisterUserCommand
+                (registerRequest.Username, registerRequest.Password));
             return registeredUser.IsSuccess
                 ? Ok(registeredUser.Value)
                 : BadRequest(registeredUser.Error);
         }
 
         [HttpGet("login")]
-        public async Task<IActionResult> LoginUser([FromBody] string username, string password)
+        public async Task<IActionResult> LoginUser([FromBody] AuthRequest loginInRequest)
         {
-            var loggedInUser = await mediator.Send(new LoginUserCommnad(username, password));
+            var loggedInUser = await mediator.Send(new LoginUserCommnad
+                (loginInRequest.Username, loginInRequest.Password));
             return loggedInUser.IsSuccess
                 ? Ok(loggedInUser.Value)
                 : BadRequest(loggedInUser.Error);
