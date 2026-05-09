@@ -1,17 +1,4 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using MoneyGo.Application.Customers.Commands.CustomerCommands;
-using MoneyGo.Application.Customers.Commands.DeleteCustomer;
-using MoneyGo.Application.Customers.Commands.UpdateCustomer;
-using MoneyGo.Application.Customers.DTOs;
-using MoneyGo.Application.Customers.Queries.GetCustomerById;
-using MoneyGo.Application.Customers.Queries.GetCustomersByUserId;
-using MoneyGo.Application.Transactions.Commands.AddCreditTransaction;
-using MoneyGo.Application.Transactions.Commands.AddPaymentTransaction;
-using MoneyGo.Application.Transactions.DTOs;
-using MoneyGo.Application.Transactions.Queries.GetTransactionsById;
-
-namespace MoneyGo.Api.Controllers
+﻿namespace MoneyGo.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -67,27 +54,6 @@ namespace MoneyGo.Api.Controllers
             return result.IsSuccess
                 ? Ok(result.Value)
                 : NotFound(result.Error);
-        }
-
-        [HttpGet("{id:int}/transactions")]
-        public async Task<IActionResult> GetAllTransactionById(int id)
-        {
-            var result = await mediator.Send(new GetTransactionsByIdQuery(id));
-            return result.IsSuccess ? Ok(result.Value) : NotFound(result.Error);
-        }
-
-        [HttpPost("{id:int}/transactions/credit")]
-        public async Task<IActionResult> CreateCreditTransaction(int custId, [FromBody] TransactionRequest creditTrn)
-        {
-            var creditResult = await mediator.Send(new AddCreditTransactionCommand(custId, creditTrn));
-            return creditResult.IsSuccess ? Ok(creditResult.Value) : BadRequest(creditResult.Error);
-        }
-
-        [HttpPost("{id:int}/transactions.payment")]
-        public async Task<IActionResult> CreatePaymentTransaction(int custId, [FromBody]TransactionRequest paymentTrn)
-        {
-            var paymentResult = await mediator.Send(new AddPaymentTransactionCommand(custId, paymentTrn));
-            return paymentResult.IsSuccess ? Ok(paymentResult.Value) : BadRequest(paymentResult.Error);
         }
     }
 }
