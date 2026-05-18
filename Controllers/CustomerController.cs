@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using MoneyGo.Application.Customers.Commands.BulkCreateCustomer;
 
 namespace MoneyGo.Api.Controllers
 {
@@ -16,6 +17,15 @@ namespace MoneyGo.Api.Controllers
         public async Task<IActionResult> Create([FromBody] CustomerRequest customer)
         {
             var result = await mediator.Send(new AddCustomerCommand(customer));
+            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+        }
+
+        [HttpPost("bulk-create")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> BulkCreate([FromBody] IEnumerable<CustomerRequest> customers)
+        {
+            var result = await mediator.Send(new BulkAddCustomerCommand(customers));
             return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
 
