@@ -11,7 +11,9 @@
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody] AuthRequest request)
         {
-            var result = await mediator.Send(new RegisterUserCommand(request.Username, request.Password));
+            var command = new RegisterUserCommand(request.Username, request.Password);
+
+            var result = await mediator.Send(command);
 
             return result.IsSuccess
                 ? Ok(result.Value)
@@ -21,7 +23,9 @@
         [HttpPost("login")]
         public async Task<IActionResult> LoginUser([FromBody] AuthRequest request)
         {
-            var result = await mediator.Send(new LoginUserCommnad(request.Username, request.Password));
+            var command = new LoginUserCommnad(request.Username, request.Password);
+
+            var result = await mediator.Send(command);
 
             return result.IsSuccess
                 ? Ok(result.Value)
