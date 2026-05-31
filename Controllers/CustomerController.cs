@@ -50,7 +50,8 @@ namespace MoneyGo.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetCustomerById(int id)
         {
-            var result = await mediator.Send(new GetCustomerByIdQuery(id));
+            var query = new GetCustomerByIdQuery(id);
+            var result = await mediator.Send(query);
             return result.IsSuccess 
                 ? Ok(result.Value) 
                 : NotFound(result.Error);
@@ -60,7 +61,8 @@ namespace MoneyGo.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update(int id, [FromBody] CustomerRequest customerDetails)
         {
-            var result = await mediator.Send(new UpdateCustomerCommand(id, customerDetails));
+            var command = new UpdateCustomerCommand(id, customerDetails);
+            var result = await mediator.Send(command);
             return result.IsSuccess
                 ? Ok(result.Value)
                 : NotFound(result.Error);
@@ -70,7 +72,8 @@ namespace MoneyGo.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await mediator.Send(new DeleteCustomerCommand(id));
+            var command = new DeleteCustomerCommand(id);
+            var result = await mediator.Send(command);
             return result.IsSuccess
                 ? Ok(result.Value)
                 : NotFound(result.Error);
