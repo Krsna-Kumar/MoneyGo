@@ -16,8 +16,11 @@ namespace MoneyGo.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] CustomerRequest customer)
         {
-            var result = await mediator.Send(new AddCustomerCommand(customer));
-            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+            var command = new AddCustomerCommand(customer);
+            var result = await mediator.Send(command);
+            return result.IsSuccess 
+                ? Ok(result.Value) 
+                : BadRequest(result.Error);
         }
 
         [HttpPost("bulk-create")]
@@ -25,15 +28,19 @@ namespace MoneyGo.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> BulkCreate([FromBody] IEnumerable<CustomerRequest> customers)
         {
-            var result = await mediator.Send(new BulkAddCustomerCommand(customers));
-            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+            var command = new BulkAddCustomerCommand(customers);
+            var result = await mediator.Send(command);
+            return result.IsSuccess 
+                ? Ok(result.Value) 
+                : BadRequest(result.Error);
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAllCustomers()
         {
-            var result = await mediator.Send(new GetCustomersByUserIdQuery());
+            var query = new GetCustomersByUserIdQuery();
+            var result = await mediator.Send(query);
             return result.IsSuccess
                 ? Ok(result.Value)
                 : BadRequest(result.Error);
