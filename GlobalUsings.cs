@@ -1,6 +1,7 @@
 ﻿// System
 global using System.Text;
 
+
 // Authentication
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.IdentityModel.Tokens;
