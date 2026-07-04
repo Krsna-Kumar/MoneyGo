@@ -1,6 +1,8 @@
 using Microsoft.IdentityModel.JsonWebTokens;
 using MoneyGo.Application.Common.Interfaces;
 using Scalar.AspNetCore;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace MoneyGo.Api
 {
@@ -44,7 +46,14 @@ namespace MoneyGo.Api
                 builder.Services.AddHttpContextAccessor();
                 builder.Services.AddScoped<ICurrentUserService, CurrentUserSerivce>();
 
-                builder.Services.AddControllers();
+                builder.Services.AddControllers()
+                    .AddJsonOptions(options =>
+                    {
+                        var enumConverter = new JsonStringEnumConverter(JsonNamingPolicy.CamelCase);
+                        options.JsonSerializerOptions.Converters.Add(enumConverter);
+
+                        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    });
                 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
                 builder.Services.AddOpenApi();
             }

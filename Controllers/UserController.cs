@@ -1,19 +1,20 @@
 ﻿using MoneyGo.Application.Common.UpdateUser;
-using MoneyGo.Core.Entities.Enums;
 
 namespace MoneyGo.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class UserController
-        (IMediator mediator): ControllerBase
+        (IMediator mediator) : ControllerBase
     {
-        [HttpPost]
-        public async Task<IActionResult> UpdateUserStatusBulk([FromBody] UserStatus status)
+        [HttpPut("update-status")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdateUserStatusBulk([FromBody] UserStatusRequest request)
         {
-            var result = await mediator.Send(new UpdateUserCommand(status));
+            var result = await mediator.Send(new UpdateUserCommand(request.Status));
             return result.IsSuccess
-                ? Ok(result.Value)
+                ? NoContent()
                 : BadRequest(result.Error);
         }
     }
