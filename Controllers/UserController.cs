@@ -12,7 +12,8 @@ namespace MoneyGo.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateUserStatusBulk([FromBody] UserStatusRequest request)
         {
-            var result = await mediator.Send(new UpdateUserCommand(request.Status));
+            var command = new UpdateUserCommand(request.Status);
+            var result = await mediator.Send(command);
             return result.IsSuccess
                 ? NoContent()
                 : BadRequest(result.Error);
