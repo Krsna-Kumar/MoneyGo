@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using MoneyGo.Application.Customers.Commands.BulkCreateCustomer;
+using MoneyGo.Application.Customers.Queries;
+using MoneyGo.Application.Customers.Queries.GetCustomersPaged;
 
 namespace MoneyGo.Api.Controllers
 {
@@ -35,7 +37,7 @@ namespace MoneyGo.Api.Controllers
                 : BadRequest(result.Error);
         }
 
-        [HttpGet]
+        [HttpGet("all")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAllCustomers()
         {
@@ -44,6 +46,18 @@ namespace MoneyGo.Api.Controllers
             return result.IsSuccess
                 ? Ok(result.Value)
                 : BadRequest(result.Error);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCustomersPaged(
+    [FromQuery] CustomerQueryParameter parameters)
+        {
+            // Example GET request URL:
+            // /api/customers?SearchTerm=john&SortBy=Phone&IsDescending=true&PageNumber=1&PageSize=10
+
+            var query = new GetCustomerPagedQuery(parameters);
+            var result = await mediator.Send(query);
+            return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
         }
 
         [HttpGet("{id:int}")]
