@@ -3,7 +3,6 @@ using MoneyGo.Application.Common.Interfaces;
 using Scalar.AspNetCore;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Scalar;
 
 namespace MoneyGo.Api
 {
