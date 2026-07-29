@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="../../MoneyGo.Web/MoneyGo.Web.csproj" />
   <Project Path="../MoneyGo.Application/MoneyGo.Application.csproj" Id="8cf2b04f-e441-4db1-b956-5e3e5965861f" />
   <Project Path="../MoneyGo.Core/MoneyGo.Core.csproj" Id="2c3ad116-8cb1-41e6-a477-6669174e46a1" />
   <Project Path="../MoneyGo.Infrastructure/MoneyGo.Infrastructure.csproj" Id="46c1fee3-e336-4e1d-9a90-558fd63d532b" />
